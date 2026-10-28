@@ -45,8 +45,9 @@ create policy "Guests can send an RSVP"
 
 -- Checks the passcode with throttling:
 --   * 10 wrong tries from one IP address in 15 minutes locks that address for the rest of the window
---   * 60 wrong tries from all addresses together in 15 minutes locks everyone (backstop against IP rotation)
--- Checks run one at a time (advisory lock), so parallel requests cannot slip past the limits.
+--   * 20 wrong tries from all addresses together in 15 minutes locks everyone (backstop against IP rotation)
+-- The address comes only from headers set by Supabase's edge, never from the client-supplied part of X-Forwarded-For.
+-- Checks run one at a time (short advisory lock, no waiting inside it), so parallel requests cannot slip past the limits.
 -- If you are ever locked out:  delete from public.rsvp_admin_attempts;
 create or replace function public.rsvp_admin_check(p_passcode text)
 returns text
@@ -57,9 +58,11 @@ as $$
 declare
   v_ok boolean;
   v_headers json := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::json;
+  -- cf-connecting-ip is set by Cloudflare in front of Supabase; otherwise use the rightmost
+  -- X-Forwarded-For entry (appended by the proxy), never the leftmost one a client can forge
   v_ip text := coalesce(
-    nullif(v_headers ->> 'cf-connecting-ip', ''),
-    nullif(trim(split_part(v_headers ->> 'x-forwarded-for', ',', 1)), ''),
+    nullif(trim(v_headers ->> 'cf-connecting-ip'), ''),
+    nullif(trim(regexp_replace(coalesce(v_headers ->> 'x-forwarded-for', ''), '^.*,', '')), ''),
     'unknown');
 begin
   perform pg_advisory_xact_lock(hashtext('public.rsvp_admin_check'));
@@ -67,16 +70,13 @@ begin
   if (select count(*) from rsvp_admin_attempts
       where not ok and ip = v_ip and at > now() - interval '15 minutes') >= 10
   or (select count(*) from rsvp_admin_attempts
-      where not ok and at > now() - interval '15 minutes') >= 60 then
+      where not ok and at > now() - interval '15 minutes') >= 20 then
     return 'locked';
   end if;
 
   select passcode_hash = crypt(coalesce(p_passcode, ''), passcode_hash)
     into v_ok from rsvp_admin_settings where id = 1;
   v_ok := coalesce(v_ok, false);
-  if not v_ok then
-    perform pg_sleep(0.5);  -- slows guessing; the lock above makes this apply to all callers
-  end if;
   insert into rsvp_admin_attempts (ok, ip) values (v_ok, v_ip);
   delete from rsvp_admin_attempts where at < now() - interval '1 day';
   return case when v_ok then 'ok' else 'wrong' end;
