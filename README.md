@@ -24,7 +24,7 @@ Guest replies are stored in your own Supabase project, and `admin.html` shows th
 3. In **Project Settings → API**, copy the Project URL and the publishable (or `anon`) key into `js/supabase-config.js`.
 4. Open `admin.html` (e.g. `https://<user>.github.io/tariq-maha-wedding/admin.html`) and enter the passcode.
 
-After 20 wrong passcodes within 15 minutes, the admin page refuses all attempts until the window passes. To change the passcode, re-run the last statement in `setup.sql` with the new value.
+Wrong passcodes are throttled: 10 from one IP address in 15 minutes locks that address, and 60 from everyone together locks the page for the rest of the 15 minutes. If you are ever locked out, run `delete from public.rsvp_admin_attempts;` in the SQL Editor. To change the passcode, re-run the last statement in `setup.sql` with the new value.
 
 ## Structure
 - `index.html` – entry page

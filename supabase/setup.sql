@@ -26,6 +26,8 @@ create table if not exists public.rsvp_admin_attempts (
   at timestamptz not null default now(),
   ok boolean not null
 );
+alter table public.rsvp_admin_attempts add column if not exists ip text;
+create index if not exists rsvp_admin_attempts_at on public.rsvp_admin_attempts (at);
 
 alter table public.rsvps                enable row level security;
 alter table public.rsvp_admin_settings  enable row level security;  -- no policies: never readable from the browser
@@ -41,7 +43,11 @@ create policy "Guests can send an RSVP"
   to anon, authenticated
   with check (true);
 
--- Checks the passcode; after 20 wrong tries in 15 minutes every try is refused until the window passes.
+-- Checks the passcode with throttling:
+--   * 10 wrong tries from one IP address in 15 minutes locks that address for the rest of the window
+--   * 60 wrong tries from all addresses together in 15 minutes locks everyone (backstop against IP rotation)
+-- Checks run one at a time (advisory lock), so parallel requests cannot slip past the limits.
+-- If you are ever locked out:  delete from public.rsvp_admin_attempts;
 create or replace function public.rsvp_admin_check(p_passcode text)
 returns text
 language plpgsql
@@ -50,15 +56,28 @@ set search_path = public, extensions
 as $$
 declare
   v_ok boolean;
+  v_headers json := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::json;
+  v_ip text := coalesce(
+    nullif(v_headers ->> 'cf-connecting-ip', ''),
+    nullif(trim(split_part(v_headers ->> 'x-forwarded-for', ',', 1)), ''),
+    'unknown');
 begin
+  perform pg_advisory_xact_lock(hashtext('public.rsvp_admin_check'));
+
   if (select count(*) from rsvp_admin_attempts
-      where not ok and at > now() - interval '15 minutes') >= 20 then
+      where not ok and ip = v_ip and at > now() - interval '15 minutes') >= 10
+  or (select count(*) from rsvp_admin_attempts
+      where not ok and at > now() - interval '15 minutes') >= 60 then
     return 'locked';
   end if;
+
   select passcode_hash = crypt(coalesce(p_passcode, ''), passcode_hash)
     into v_ok from rsvp_admin_settings where id = 1;
   v_ok := coalesce(v_ok, false);
-  insert into rsvp_admin_attempts (ok) values (v_ok);
+  if not v_ok then
+    perform pg_sleep(0.5);  -- slows guessing; the lock above makes this apply to all callers
+  end if;
+  insert into rsvp_admin_attempts (ok, ip) values (v_ok, v_ip);
   delete from rsvp_admin_attempts where at < now() - interval '1 day';
   return case when v_ok then 'ok' else 'wrong' end;
 end;
