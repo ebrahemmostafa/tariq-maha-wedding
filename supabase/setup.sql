@@ -20,6 +20,20 @@ begin
   end if;
 end $$;
 
+-- The old table keeps whatever access it had; make it private (dashboard / SQL Editor only).
+do $$
+declare
+  p record;
+begin
+  if to_regclass('public.rsvps_old') is not null then
+    alter table public.rsvps_old enable row level security;
+    revoke all on public.rsvps_old from public, anon, authenticated;
+    for p in select policyname from pg_policies where schemaname = 'public' and tablename = 'rsvps_old' loop
+      execute format('drop policy %I on public.rsvps_old', p.policyname);
+    end loop;
+  end if;
+end $$;
+
 create table if not exists public.rsvps (
   id                   uuid primary key default gen_random_uuid(),
   full_name            text not null check (char_length(full_name) between 1 and 500),
