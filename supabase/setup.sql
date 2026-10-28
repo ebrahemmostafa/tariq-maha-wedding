@@ -5,6 +5,21 @@
 
 create extension if not exists pgcrypto with schema extensions;
 
+-- If an `rsvps` table with a different layout already exists, keep it as `rsvps_old`
+-- (nothing is deleted) and create the expected table below.
+do $$
+begin
+  if to_regclass('public.rsvps') is not null
+     and not exists (select 1 from information_schema.columns
+                     where table_schema = 'public' and table_name = 'rsvps' and column_name = 'responded_at') then
+    if to_regclass('public.rsvps_old') is not null then
+      raise exception 'public.rsvps has an unexpected layout and public.rsvps_old already exists; rename or drop one of them first';
+    end if;
+    alter table public.rsvps rename to rsvps_old;
+    raise notice 'Existing public.rsvps renamed to public.rsvps_old';
+  end if;
+end $$;
+
 create table if not exists public.rsvps (
   id                   uuid primary key default gen_random_uuid(),
   full_name            text not null check (char_length(full_name) between 1 and 500),
