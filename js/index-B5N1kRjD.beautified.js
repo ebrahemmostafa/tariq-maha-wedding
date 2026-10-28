@@ -22031,7 +22031,11 @@ function e8({
         className: "relative h-[100svh] overflow-hidden bg-ivory",
         onClick: p,
         style: {
-            cursor: i === "idle" ? "pointer" : "default"
+            cursor: i === "idle" ? "pointer" : "default",
+            // closed doors behind the video: phones show this while the video is still buffering
+            backgroundImage: `url(${BD.url})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
         },
         children: [f.jsx("audio", {
             ref: o,
