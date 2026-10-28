@@ -35153,8 +35153,9 @@ function rZ() {
         removeItem: v => (localStorage.removeItem(v), p("lovable-preview-auth:remove", v).then(() => {}))
     }
 }
-const sZ = "https://glrbforeeuiapdswgfbh.supabase.co",
-    $b = "sb_publishable_h1PebDucbsjrw9dsP0KybA_ZxBVPvB4";
+const rsvpSupabaseConfig = window.SUPABASE_CONFIG || {},
+    sZ = rsvpSupabaseConfig.url || "https://not-configured.supabase.co",
+    $b = rsvpSupabaseConfig.key || "not-configured";
 
 function oZ(e) {
     return e.startsWith("sb_publishable_") || e.startsWith("sb_secret_")
@@ -35183,24 +35184,23 @@ const Pd = tZ(sZ, $b, {
 function aZ() {
     return U2({
         mutationFn: async e => {
+            if (!rsvpSupabaseConfig.url || !rsvpSupabaseConfig.key) throw new Error("RSVPs are not open yet. Please try again later.");
+            // hidden "website" field is a bot trap: real guests leave it empty
+            if (e.website) return {
+                isUpdate: !1
+            };
             const {
-                data: t,
                 error: n
-            } = await Pd.functions.invoke("submit-rsvp", {
-                body: e
+            } = await Pd.from("rsvps").insert({
+                full_name: e.full_name,
+                attendance: e.attendance,
+                guest_count: e.guest_count,
+                adult_count: e.adult_count,
+                children_count: e.children_count,
+                dietary_requirements: e.dietary_requirements || null,
+                message: e.message || null
             });
-            if (n) {
-                let r = n.message;
-                try {
-                    const s = n.context;
-                    if (s && typeof s.json == "function") {
-                        const o = await s.json();
-                        o != null && o.error && (r = o.error)
-                    }
-                } catch {}
-                throw new Error(r || "Could not send your response")
-            }
-            if (t != null && t.error) throw new Error(t.error);
+            if (n) throw new Error("Could not send your response. Please try again.");
             return {
                 isUpdate: !1
             }
@@ -35985,11 +35985,11 @@ function aJ({
                 children: f.jsxs("p", {
                     className: "text-sm text-sage-dark/60 mt-2 font-body font-medium",
                     children: [r("footer.madeBy"), " ", f.jsx("a", {
-                        href: "https://www.thedigitalyes.com",
+                        href: "https://www.instagram.com/ajwaa.eg_26/?hl=en",
                         target: "_blank",
                         rel: "noopener noreferrer",
                         className: "hover:text-gold transition-colors underline underline-offset-2 font-semibold",
-                        children: "The Digital Yes"
+                        children: "Ajwaa"
                     })]
                 })
             })]
@@ -38882,10 +38882,10 @@ const pte = () => {
                                 element: f.jsx(QJ, {})
                             }), f.jsx(ua, {
                                 path: "/admin",
-                                element: f.jsx(XJ, {})
+                                element: f.jsx(QJ, {})
                             }), f.jsx(ua, {
                                 path: "/admin/dashboard",
-                                element: f.jsx(hte, {})
+                                element: f.jsx(QJ, {})
                             }), f.jsx(ua, {
                                 path: "*",
                                 element: f.jsx(QJ, {})

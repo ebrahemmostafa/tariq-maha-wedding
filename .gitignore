@@ -3,3 +3,6 @@ source-code-stainedglass/
 
 # Local tooling
 .claude/
+
+# Local SQL with the real admin passcode
+supabase/setup.local.sql

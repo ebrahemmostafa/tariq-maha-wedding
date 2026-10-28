@@ -1,0 +1,112 @@
+-- Tariq & Maha wedding — RSVP storage
+-- Run once in your Supabase project: Dashboard → SQL Editor → New query → paste → Run.
+-- Replace __ADMIN_PASSCODE__ (near the bottom) with the passcode for admin.html before running.
+-- The passcode is stored only as a bcrypt hash; run the last statement again to change it.
+
+create extension if not exists pgcrypto with schema extensions;
+
+create table if not exists public.rsvps (
+  id                   uuid primary key default gen_random_uuid(),
+  full_name            text not null check (char_length(full_name) between 1 and 500),
+  attendance           text not null check (attendance in ('yes', 'no')),
+  guest_count          integer not null default 1 check (guest_count between 0 and 30),
+  adult_count          integer not null default 1 check (adult_count between 0 and 20),
+  children_count       integer not null default 0 check (children_count between 0 and 20),
+  dietary_requirements text check (char_length(dietary_requirements) <= 1000),
+  message              text check (char_length(message) <= 2000),
+  responded_at         timestamptz not null default now()
+);
+
+-- Admin passcode (hashed) and a log of passcode attempts for throttling.
+create table if not exists public.rsvp_admin_settings (
+  id            integer primary key default 1 check (id = 1),
+  passcode_hash text not null
+);
+create table if not exists public.rsvp_admin_attempts (
+  at timestamptz not null default now(),
+  ok boolean not null
+);
+
+alter table public.rsvps                enable row level security;
+alter table public.rsvp_admin_settings  enable row level security;  -- no policies: never readable from the browser
+alter table public.rsvp_admin_attempts  enable row level security;  -- no policies: never readable from the browser
+
+-- Guests may only add an RSVP; nobody can read rows directly with the public key.
+revoke all on public.rsvps, public.rsvp_admin_settings, public.rsvp_admin_attempts from anon, authenticated;
+grant insert on public.rsvps to anon, authenticated;
+
+drop policy if exists "Guests can send an RSVP" on public.rsvps;
+create policy "Guests can send an RSVP"
+  on public.rsvps for insert
+  to anon, authenticated
+  with check (true);
+
+-- Checks the passcode; after 20 wrong tries in 15 minutes every try is refused until the window passes.
+create or replace function public.rsvp_admin_check(p_passcode text)
+returns text
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  v_ok boolean;
+begin
+  if (select count(*) from rsvp_admin_attempts
+      where not ok and at > now() - interval '15 minutes') >= 20 then
+    return 'locked';
+  end if;
+  select passcode_hash = crypt(coalesce(p_passcode, ''), passcode_hash)
+    into v_ok from rsvp_admin_settings where id = 1;
+  v_ok := coalesce(v_ok, false);
+  insert into rsvp_admin_attempts (ok) values (v_ok);
+  delete from rsvp_admin_attempts where at < now() - interval '1 day';
+  return case when v_ok then 'ok' else 'wrong' end;
+end;
+$$;
+
+-- admin.html: every RSVP, newest first
+create or replace function public.admin_list_rsvps(p_passcode text)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_check text := rsvp_admin_check(p_passcode);
+begin
+  if v_check <> 'ok' then
+    return json_build_object('ok', false, 'error', v_check);
+  end if;
+  return json_build_object('ok', true, 'rows', coalesce(
+    (select json_agg(r order by r.responded_at desc) from rsvps r), '[]'::json));
+end;
+$$;
+
+-- admin.html: delete one RSVP
+create or replace function public.admin_delete_rsvp(p_passcode text, p_id uuid)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_check text := rsvp_admin_check(p_passcode);
+begin
+  if v_check <> 'ok' then
+    return json_build_object('ok', false, 'error', v_check);
+  end if;
+  delete from rsvps where id = p_id;
+  return json_build_object('ok', true);
+end;
+$$;
+
+revoke all on function public.rsvp_admin_check(text) from public, anon, authenticated;
+revoke all on function public.admin_list_rsvps(text) from public;
+revoke all on function public.admin_delete_rsvp(text, uuid) from public;
+grant execute on function public.admin_list_rsvps(text) to anon, authenticated;
+grant execute on function public.admin_delete_rsvp(text, uuid) to anon, authenticated;
+
+-- ▼ Admin passcode for admin.html
+insert into public.rsvp_admin_settings (id, passcode_hash)
+values (1, extensions.crypt('__ADMIN_PASSCODE__', extensions.gen_salt('bf')))
+on conflict (id) do update set passcode_hash = excluded.passcode_hash;

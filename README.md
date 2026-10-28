@@ -16,8 +16,21 @@ Digital wedding invitation for **Tariq Mohamed & Maha Khaled**, built on the Sta
 7. Program — arrival, entrance, katb ketab, party, photos, dinner
 8. RSVP
 
+## RSVPs (Supabase)
+Guest replies are stored in your own Supabase project, and `admin.html` shows them (totals, search, CSV export, delete) behind a passcode.
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. In **SQL Editor**, run `supabase/setup.sql`, replacing `__ADMIN_PASSCODE__` at the bottom with the admin passcode first. It creates the `rsvps` table with row-level security: guests can only add a reply; reading or deleting goes through the passcode-checked functions.
+3. In **Project Settings → API**, copy the Project URL and the publishable (or `anon`) key into `js/supabase-config.js`.
+4. Open `admin.html` (e.g. `https://<user>.github.io/tariq-maha-wedding/admin.html`) and enter the passcode.
+
+After 20 wrong passcodes within 15 minutes, the admin page refuses all attempts until the window passes. To change the passcode, re-run the last statement in `setup.sql` with the new value.
+
 ## Structure
 - `index.html` – entry page
+- `admin.html` – RSVP dashboard (passcode protected)
+- `js/supabase-config.js` – your Supabase URL and publishable key
+- `supabase/setup.sql` – database setup for RSVPs
 - `js/index-B5N1kRjD.beautified.js` – app bundle (all invitation text lives here)
 - `css/` – compiled styles
 - `assets/` – images, intro video and background music
