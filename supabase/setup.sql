@@ -1,6 +1,6 @@
 -- Tariq & Maha wedding — RSVP storage
 -- Run once in your Supabase project: Dashboard → SQL Editor → New query → paste → Run.
--- Replace __ADMIN_PASSCODE__ (near the bottom) with the passcode for admin.html before running.
+-- Replace __ADMIN_PASSCODE__ (near the bottom) with the passcode for rsvp.html before running.
 -- The passcode is stored only as a bcrypt hash; run the last statement again to change it.
 
 create extension if not exists pgcrypto with schema extensions;
@@ -112,7 +112,7 @@ begin
 end;
 $$;
 
--- admin.html: every RSVP, newest first
+-- rsvp.html: every RSVP, newest first
 create or replace function public.admin_list_rsvps(p_passcode text)
 returns json
 language plpgsql
@@ -130,7 +130,7 @@ begin
 end;
 $$;
 
--- admin.html: delete one RSVP
+-- rsvp.html: delete one RSVP
 create or replace function public.admin_delete_rsvp(p_passcode text, p_id uuid)
 returns json
 language plpgsql
@@ -154,7 +154,7 @@ revoke all on function public.admin_delete_rsvp(text, uuid) from public;
 grant execute on function public.admin_list_rsvps(text) to anon, authenticated;
 grant execute on function public.admin_delete_rsvp(text, uuid) to anon, authenticated;
 
--- ▼ Admin passcode for admin.html
+-- ▼ Admin passcode for rsvp.html
 insert into public.rsvp_admin_settings (id, passcode_hash)
 values (1, extensions.crypt('__ADMIN_PASSCODE__', extensions.gen_salt('bf')))
 on conflict (id) do update set passcode_hash = excluded.passcode_hash;
