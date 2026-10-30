@@ -16153,18 +16153,103 @@ DEC
         "footer.madeBy": "Made with love by"
     },
     I5 = {
-        ...eS
+        ...eS,
+        ...{
+        "hero.rsvp": "اكتشف",
+        "hero.together": "يتشرفون بدعوتكم لحضور حفل زفاف",
+        "hero.honour": "السبت · 5 ديسمبر 2026 · 5:00 مساءً",
+        "countdown.title": "العد التنازلي",
+        "countdown.until": "حتى 5 ديسمبر 2026",
+        "countdown.days": "أيام",
+        "countdown.hours": "ساعات",
+        "countdown.minutes": "دقائق",
+        "countdown.seconds": "ثوانٍ",
+        "scratchToReveal": "امسح\nلتكشف",
+        "welcome.title": "أهلاً بكم",
+        "welcome.parents": "مع عائلتيهما",
+        "welcome.couple": "طارق ومها",
+        "events.title": "حفل الزفاف",
+        "events.subtitle": "مكان الاحتفال",
+        "events.date": "السبت، 5 ديسمبر 2026",
+        "events.openMaps": "افتح في الخرائط",
+        "events.addCalendar": "أضف إلى التقويم",
+        "dress.title": "الزي المقترح",
+        "dress.main": "ألوان الحفل",
+        "rsvp.title": "تأكيد الحضور",
+        "rsvp.subtitle": "يسعدنا أن تخبرونا إن كنتم ستشاركوننا",
+        "rsvp.attend": "هل ستحضر؟ *",
+        "rsvp.yes": "يسعدني الحضور",
+        "rsvp.no": "أعتذر عن الحضور",
+        "rsvp.fullName": "الاسم بالكامل *",
+        "rsvp.enterName": "اكتب اسمك بالكامل",
+        "rsvp.message": "رسالة للعروسين",
+        "rsvp.messagePlaceholder": "اكتب أمنية أو ذكرى أو أي كلمة تحب نقرأها…",
+        "rsvp.sending": "جارٍ الإرسال…",
+        "rsvp.send": "إرسال",
+        "rsvp.error": "تعذّر إرسال ردك. حاول مرة أخرى.",
+        "rsvp.selectAttendance": "من فضلك اختر إن كنت ستحضر.",
+        "confirm.thankYou": "شكراً لك",
+        "confirm.cantMake": "نأسف لعدم تمكنك من الحضور، وستكون في بالنا في يومنا المميز.",
+        "confirm.thankResponse": "شكراً على ردك!",
+        "confirm.excited": "سعداء جداً بالاحتفال معك في ذا فاين.",
+        "confirm.thankPart": "شكراً لأنك جزء من قصتنا.",
+        "confirm.lookForward": "في انتظاركم يوم:",
+        "confirm.addCalendar": "أضف إلى التقويم",
+        "confirm.plansChange": "لو تغيّرت خططك ولن تتمكن من الحضور، من فضلك أخبرنا في أقرب وقت.",
+        "footer.madeBy": "صُنع بحب بواسطة",
+        "Tap to open": "اضغط للفتح",
+        "The Vine": "ذا فاين",
+        "The": "ذا",
+        " Vine": " فاين",
+        "Obour City": "مدينة العبور",
+        "Gameiat Oraby": "جمعية عرابي",
+        "Line 7, Gameiat Oraby": "الخط 7، جمعية عرابي",
+        "Saturday, 5th of December, 2026": "السبت، 5 ديسمبر 2026",
+        "Tariq": "طارق",
+        "Maha": "مها",
+        "Mohamed": "محمد",
+        "Khaled": "خالد",
+        "Request the pleasure of your company as they begin their journey together.": "ويسعدهم مشاركتكم فرحتهم في بداية رحلتهم معاً.",
+        "We can't wait to celebrate our love with you": "ننتظركم بكل حب لنحتفل معاً",
+        "so don't be late!": "فلا تتأخروا!",
+        "05 · 12 · 2026": "5 ديسمبر 2026",
+        "Our wedding color palette for the ladies.": "ألوان حفلنا للسيدات.",
+        "If you wish, we'd love for you to dress in harmony with our chosen colors to add a special touch to our beautiful day.": "لو حابين، يسعدنا تنسيق ملابسكم مع الألوان اللي اخترناها لتضيف لمسة جميلة ليومنا.",
+        "Program": "برنامج اليوم",
+        "This will be the order": "وهكذا سيكون",
+        "of the day": "ترتيب يومنا",
+        "Guest Arrival": "استقبال الضيوف",
+        "Entrance": "دخول العروسين",
+        "Katb Ketab": "كتب الكتاب",
+        "Party": "الحفل",
+        "Photos Time": "وقت التصوير",
+        "Dinner": "العشاء",
+        "December 5, 2026": "5 ديسمبر 2026",
+        "&": "و"
+    }
     },
     M5 = {
         en: eS,
-        it: I5
+        ar: I5
     },
     tS = m.createContext(void 0);
 
 function D5({
     children: e
 }) {
-    const [t, n] = m.useState("en"), r = s => M5[t][s] || s;
+    const [t, n] = m.useState(() => {
+        try {
+            return localStorage.getItem("invite-lang") === "ar" ? "ar" : "en"
+        } catch {
+            return "en"
+        }
+    }), r = s => typeof s != "string" ? s : t === "ar" ? M5.ar[s] || s.replace(/^(\d{1,2}:\d{2}) PM$/, "$1 مساءً") : M5.en[s] || s;
+    m.useLayoutEffect(() => {
+        document.documentElement.lang = t, document.documentElement.dir = t === "ar" ? "rtl" : "ltr";
+        try {
+            localStorage.setItem("invite-lang", t)
+        } catch {}
+    }, [t]);
     return f.jsx(tS.Provider, {
         value: {
             language: t,
@@ -16173,6 +16258,11 @@ function D5({
         },
         children: e
     })
+}
+
+function trL(e) {
+    const t = m.useContext(tS);
+    return t ? t.t(e) : e
 }
 
 function Hn() {
@@ -21921,7 +22011,7 @@ const fD = {
     WD = 1,
     HD = "f1d37e60-6290-4a28-9439-4cead439799f",
     KD = "23bfcf12-6136-45ef-b70a-a3bc0be2e938",
-    GD = "assets/l5e-audio/marry-me.mp3",
+    GD = "assets/l5e-audio/cant-help-falling-in-love.mp3",
     qD = "a/v1/23bfcf12-6136-45ef-b70a-a3bc0be2e938/f1d37e60-6290-4a28-9439-4cead439799f/marry-me.mp3",
     YD = "marry-me.mp3",
     QD = 7473310,
@@ -22021,7 +22111,7 @@ function e8({
         },
         x = () => {
             var w;
-            (w = document.getElementById("countdown")) == null || w.scrollIntoView({
+            (w = document.getElementById("welcome")) == null || w.scrollIntoView({
                 behavior: "smooth"
             })
         },
@@ -22147,19 +22237,19 @@ function e8({
                     children: [f.jsx(_r, {
                         delay: .56,
                         children: f.jsx("span", {
-                            children: e
+                            children: trL(e)
                         })
                     }), f.jsx(_r, {
                         delay: .74,
                         x: -1.5,
                         children: f.jsx("span", {
                             className: "font-subtitle italic text-2xl md:text-3xl leading-none my-3 md:my-4 text-sage-dark/90",
-                            children: "&"
+                            children: trL("&")
                         })
                     }), f.jsx(_r, {
                         delay: .92,
                         children: f.jsx("span", {
-                            children: t
+                            children: trL(t)
                         })
                     })]
                 }), f.jsx(_r, {
@@ -22174,13 +22264,13 @@ function e8({
                         delay: 1.28,
                         children: f.jsx("p", {
                             className: "font-body text-xs md:text-sm text-sage-dark tracking-[0.18em] uppercase mt-3 md:mt-4",
-                            children: "The Vine"
+                            children: trL("The Vine")
                         })
                     }), f.jsx(_r, {
                         delay: 1.46,
                         children: f.jsx("p", {
                             className: "font-body text-xs md:text-sm text-sage-dark/80 tracking-[0.18em] uppercase mt-1",
-                            children: "Gameiat Oraby · Obour City"
+                            children: trL("Obour City")
                         })
                     })]
                 })]
@@ -22195,7 +22285,7 @@ function e8({
                 ease: "easeInOut"
             },
             className: "absolute bottom-12 left-0 right-0 text-center font-body tracking-[0.25em] text-xs md:text-sm uppercase text-sage-dark/90 pointer-events-none",
-            children: "Tap to open"
+            children: trL("Tap to open")
         }), g && f.jsxs(ue.button, {
             initial: {
                 opacity: 0
@@ -22258,7 +22348,39 @@ function t8({
         })
     })
 }
-const n8 = "assets/l5e-audio/marry-me.mp3";
+function LangToggle() {
+    const {
+        language: e,
+        setLanguage: t
+    } = Hn();
+    return f.jsx(ue.button, {
+        initial: {
+            opacity: 0,
+            scale: .8
+        },
+        animate: {
+            opacity: 1,
+            scale: 1
+        },
+        transition: {
+            duration: .5,
+            delay: 1.5
+        },
+        onClick: () => t(e === "ar" ? "en" : "ar"),
+        className: "fixed bottom-6 z-40 h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gold/30 shadow-lg flex items-center justify-center text-sage-dark hover:bg-white hover:scale-110 transition-all duration-300",
+        style: {
+            left: "24px",
+            minWidth: "48px",
+            padding: "0 14px",
+            fontFamily: e === "ar" ? "var(--font-subtitle)" : "'Amiri', serif",
+            fontSize: e === "ar" ? "14px" : "16px",
+            letterSpacing: e === "ar" ? "0.12em" : "0"
+        },
+        "aria-label": e === "ar" ? "Switch to English" : "التبديل إلى العربية",
+        children: e === "ar" ? "EN" : "عربي"
+    })
+}
+const n8 = "assets/l5e-audio/cant-help-falling-in-love.mp3";
 let ht = null,
     Uw = !1;
 
@@ -22461,7 +22583,10 @@ function k8({
                     duration: .6,
                     delay: .1
                 },
-                className: "section-eyebrow mb-2 pb-[10px] !text-[12.5px] md:!text-[14px]",
+                className: "section-eyebrow mb-2 pb-[10px] !text-[12.5px] md:!text-[14px] text-gold-dark",
+                style: {
+                    fontWeight: 600
+                },
                 children: t("countdown.until")
             }), f.jsx(ue.div, {
                 initial: {
@@ -22485,10 +22610,10 @@ function k8({
                     children: [f.jsxs("div", {
                         className: "flex flex-col items-center px-3 md:px-7",
                         children: [f.jsx("span", {
-                            className: "font-display text-[32px] md:text-[62px] font-light text-sage-dark leading-none tracking-[0.02em]",
+                            className: "font-display text-[32px] md:text-[62px] font-semibold text-sage-dark leading-none tracking-[0.02em]",
                             children: String(o.value).padStart(2, "0")
                         }), f.jsx("span", {
-                            className: "mt-3 text-[12px] tracking-[0.4em] uppercase text-gold-dark/80 font-body",
+                            className: "mt-3 text-[12px] tracking-[0.4em] uppercase text-gold-dark font-body font-semibold",
                             children: o.label
                         })]
                     }), i < s.length - 1 && f.jsx("span", {
@@ -22808,7 +22933,7 @@ function b9() {
     } = Hn();
     return f.jsx("section", {
         id: "welcome",
-        className: "section-padding bg-ivory py-20 md:py-28 relative pb-[140px] md:pb-[180px]",
+        className: "section-padding bg-ivory py-20 md:py-28 relative pb-12 md:pb-[180px]",
         children: f.jsxs("div", {
             className: "max-w-xl w-full mx-auto text-center relative",
             children: [f.jsx(ue.div, {
@@ -22893,7 +23018,7 @@ function b9() {
                         flexDirection: "column",
                         alignItems: "center"
                     },
-                    children: ["Tariq", f.jsx("span", {
+                    children: [trL("Tariq"), f.jsx("span", {
                         className: "font-body uppercase text-sage-dark",
                         style: {
                             fontSize: "13px",
@@ -22902,11 +23027,11 @@ function b9() {
                             marginTop: "2px",
                             opacity: .8
                         },
-                        children: "Mohamed"
+                        children: trL("Mohamed")
                     })]
                 }), f.jsx("span", {
                     className: "font-subtitle italic text-2xl md:text-3xl text-dusty-rose leading-none relative z-10",
-                    children: "&"
+                    children: trL("&")
                 }), f.jsx("h3", {
                     className: "font-display text-[41px] md:text-[53px] font-normal text-sage-dark leading-tight tracking-[0.01em] relative z-10",
                     style: {
@@ -22914,7 +23039,7 @@ function b9() {
                         flexDirection: "column",
                         alignItems: "center"
                     },
-                    children: ["Maha", f.jsx("span", {
+                    children: [trL("Maha"), f.jsx("span", {
                         className: "font-body uppercase text-sage-dark",
                         style: {
                             fontSize: "13px",
@@ -22923,7 +23048,7 @@ function b9() {
                             marginTop: "2px",
                             opacity: .8
                         },
-                        children: "Khaled"
+                        children: trL("Khaled")
                     })]
                 }), f.jsx(Bw, {
                     baseUrl: H8.url,
@@ -22950,7 +23075,7 @@ function b9() {
                 className: "mt-8 max-w-sm mx-auto space-y-6 font-body italic font-light text-lg md:text-xl leading-relaxed text-sage-dark",
                 children: [f.jsx("p", {
                     className: "text-sage-dark not-italic font-body text-base md:text-lg leading-relaxed",
-                    children: "Request the pleasure of your company as they begin their journey together."
+                    children: trL("Request the pleasure of your company as they begin their journey together.")
                 })]
             })]
         })
@@ -25292,7 +25417,7 @@ function uz() {
                             children: r.split("&").map((i, a, l) => a < l.length - 1 ? f.jsxs("span", {
                                 children: [i, f.jsx("span", {
                                     className: "font-subtitle italic text-[26px] md:text-[34px] text-dusty-rose align-middle",
-                                    children: "&"
+                                    children: trL("&")
                                 })]
                             }, a) : f.jsx("span", {
                                 children: i
@@ -25326,24 +25451,24 @@ function uz() {
                     }), f.jsxs("div", {
                         className: "absolute inset-0 flex flex-col items-center justify-center px-[21%] pt-[15%] pb-[15%] text-center",
                         children: [f.jsxs("h3", {
-                            className: "font-display text-5xl md:text-6xl text-sage-dark tracking-[0.02em] text-center leading-tight",
+                            className: "font-display text-5xl md:text-6xl text-sage-dark tracking-[0.02em] text-center leading-tight whitespace-nowrap",
                             children: [f.jsx("span", {
                                 className: "text-[34px] md:text-[44px]",
-                                children: "The"
-                            }), f.jsx("br", {}), "Vine"]
+                                children: trL("The")
+                            }), trL(" Vine")]
                         }), f.jsxs("p", {
                             className: "font-body sm:text-sm tracking-wide text-sage-dark text-center text-sm leading-relaxed mt-6 sm:mt-8",
-                            children: ["Gameiat Oraby", f.jsx("br", {}), "Obour City"]
+                            children: [trL("Gameiat Oraby"), f.jsx("br", {}), trL("Obour City")]
                         }), f.jsxs("div", {
                             className: "space-y-3 sm:space-y-4 mt-8 sm:mt-10",
                             children: [f.jsxs("div", {
                                 className: "flex flex-col items-center gap-1 text-sage-dark",
                                 children: [f.jsx("span", {
                                     className: "font-body sm:text-sm tracking-wide italic opacity-70 text-sm text-center leading-tight whitespace-nowrap",
-                                    children: "Saturday, 5th of December, 2026"
+                                    children: trL("Saturday, 5th of December, 2026")
                                 }), f.jsx("span", {
                                     className: "font-body sm:text-sm tracking-wide italic opacity-70 text-sm text-center leading-tight whitespace-nowrap",
-                                    children: "5:00 PM"
+                                    children: trL("5:00 PM")
                                 })]
                             }), f.jsx("div", {
                                 className: "w-10 h-px bg-gold/30 mx-auto"
@@ -25351,10 +25476,10 @@ function uz() {
                                 className: "flex flex-col items-center gap-0.5 text-sage-dark",
                                 children: [f.jsx("span", {
                                     className: "font-body sm:text-sm tracking-wide text-sm",
-                                    children: "Line 7, Gameiat Oraby"
+                                    children: trL("Line 7, Gameiat Oraby")
                                 }), f.jsx("span", {
                                     className: "font-body sm:text-xs tracking-wide opacity-70 text-xs",
-                                    children: "Obour City"
+                                    children: trL("Obour City")
                                 })]
                             })]
                         }), f.jsx("img", {
@@ -26183,6 +26308,141 @@ function HH({
     })
 }
 
+function tmVine({
+    count: e
+}) {
+    let t = "M20 0 L20 75";
+    for (let n = 0; n < e - 1; n++) {
+        const r = n % 2 === 0 ? 34 : 6,
+            s = 75 + n * 150;
+        t += ` C${r} ${s+50} ${r} ${s+100} 20 ${s+150}`
+    }
+    const n = (e - 1) * 150 + 150;
+    t += ` L20 ${n}`;
+    return f.jsxs("svg", {
+        "aria-hidden": "true",
+        className: "absolute pointer-events-none",
+        style: {
+            left: "50%",
+            top: "48px",
+            width: "40px",
+            height: "calc(100% - 96px)",
+            transform: "translateX(-50%)"
+        },
+        viewBox: `0 0 40 ${n}`,
+        preserveAspectRatio: "none",
+        children: [f.jsx("path", {
+            d: t,
+            fill: "none",
+            stroke: "#C9A46A",
+            strokeWidth: 2,
+            vectorEffect: "non-scaling-stroke"
+        }), f.jsx("path", {
+            d: t,
+            fill: "none",
+            stroke: "#7d8f6a",
+            strokeWidth: 1,
+            strokeDasharray: "2 7",
+            opacity: .7,
+            transform: "translate(3 0)",
+            vectorEffect: "non-scaling-stroke"
+        })]
+    })
+}
+
+function tmSprig({
+    flip: e
+}) {
+    return f.jsx(Fe, {
+        className: "flex",
+        style: {
+            margin: e ? "0 0 0 -18px" : "0 -18px 0 0"
+        },
+        children: f.jsxs("div", {
+            "aria-hidden": "true",
+            className: "relative",
+            style: {
+                width: "70px",
+                height: "60px",
+                transform: e ? "scaleX(-1)" : void 0
+            },
+            children: [f.jsx("img", {
+                src: "assets/l5e-images/leaf-01.png",
+                alt: "",
+                className: "absolute select-none pointer-events-none",
+                style: {
+                    width: "24px",
+                    right: "4px",
+                    top: "2px",
+                    transform: "rotate(-58deg)",
+                    transformOrigin: "100% 100%"
+                },
+                loading: "lazy"
+            }), f.jsx("img", {
+                src: "assets/l5e-images/leaf-06.png",
+                alt: "",
+                className: "absolute select-none pointer-events-none",
+                style: {
+                    width: "22px",
+                    right: "6px",
+                    top: "20px",
+                    transform: "rotate(-112deg)",
+                    transformOrigin: "100% 50%"
+                },
+                loading: "lazy"
+            }), f.jsx("img", {
+                src: "assets/l5e-images/leaf-01.png",
+                alt: "",
+                className: "absolute select-none pointer-events-none",
+                style: {
+                    width: "18px",
+                    right: "26px",
+                    top: "14px",
+                    transform: "rotate(-80deg)",
+                    opacity: .85
+                },
+                loading: "lazy"
+            })]
+        })
+    })
+}
+
+function tmCap({
+    flip: e
+}) {
+    return f.jsxs("div", {
+        "aria-hidden": "true",
+        className: "relative flex justify-center",
+        style: {
+            height: "48px",
+            transform: e ? "scaleY(-1)" : void 0
+        },
+        children: [f.jsx("img", {
+            src: "assets/l5e-images/leaf-06.png",
+            alt: "",
+            className: "select-none pointer-events-none",
+            style: {
+                width: "20px",
+                height: "auto",
+                transform: "translate(5px, 8px) rotate(-30deg)",
+                transformOrigin: "50% 100%"
+            },
+            loading: "lazy"
+        }), f.jsx("img", {
+            src: "assets/l5e-images/leaf-01.png",
+            alt: "",
+            className: "select-none pointer-events-none",
+            style: {
+                width: "20px",
+                height: "auto",
+                transform: "translate(-5px, 8px) scaleX(-1) rotate(-30deg)",
+                transformOrigin: "50% 100%"
+            },
+            loading: "lazy"
+        })]
+    })
+}
+
 function KH() {
     return f.jsxs("section", {
         id: "day-program",
@@ -26211,67 +26471,81 @@ function KH() {
             }, t))]
         }), f.jsx(Fe, {
             className: "font-script text-[41px] md:text-[53px] text-sage-dark mb-3 text-center whitespace-pre-line leading-none",
-            children: "Program"
+            children: trL("Program")
         }), f.jsxs(Fe, {
             delay: .1,
             className: "font-body text-[12px] md:text-[13px] tracking-[0.4em] uppercase text-sage-dark mb-8 text-center",
-            children: ["This will be the order", f.jsx("br", {}), "of the day"]
+            children: [trL("This will be the order"), f.jsx("br", {}), trL("of the day")]
         }), f.jsxs("div", {
-            className: "relative max-w-[640px] md:max-w-[720px] mx-auto translate-x-[10px]",
-            children: [f.jsx(Fe, {
-                className: "block w-[38%] ml-[41.83%] md:w-[26%] md:ml-[44.41%]",
-                children: f.jsx("img", {
-                    src: bz.url,
-                    alt: "",
-                    "aria-hidden": "true",
-                    className: "w-full h-auto select-none pointer-events-none block",
-                    loading: "lazy"
-                })
+            className: "relative mx-auto w-full",
+            style: {
+                maxWidth: "460px"
+            },
+            dir: "ltr",
+            children: [f.jsx(tmVine, {
+                count: VH.length
+            }), f.jsx(tmCap, {
+                flip: !1
             }), VH.map((e, t) => {
-                const {
-                    top: n
-                } = WH[t], r = t % 2 === 0, s = r ? "prog-left" : "prog-right";
+                const n = t % 2 === 0,
+                    r = f.jsxs(Fe, {
+                        delay: .08 * t,
+                        className: `flex flex-col whitespace-nowrap ${n?"items-end text-right":"items-start text-left"}`,
+                        children: [f.jsx("img", {
+                            src: e.icon.url,
+                            alt: "",
+                            "aria-hidden": "true",
+                            className: "h-[var(--icon-h)] md:h-[var(--icon-h-d)] w-auto max-w-none object-contain select-none pointer-events-none mb-2",
+                            style: {
+                                "--icon-h": e.iconH,
+                                "--icon-h-d": e.iconHD
+                            },
+                            loading: "lazy"
+                        }), f.jsx("span", {
+                            className: "font-body italic text-[17px] md:text-[22px] text-sage-dark leading-tight",
+                            dir: "auto",
+                            children: trL(e.label)
+                        }), f.jsx("span", {
+                            className: "font-body font-light text-[14px] md:text-[19px] text-sage-dark/70 tabular-nums",
+                            dir: "auto",
+                            children: trL(e.time)
+                        })]
+                    }),
+                    s = f.jsx(tmSprig, {
+                        flip: n
+                    });
                 return f.jsxs("div", {
+                    className: "relative",
+                    style: {
+                        display: "grid",
+                        gridTemplateColumns: "1fr 56px 1fr",
+                        alignItems: "center",
+                        minHeight: "150px"
+                    },
                     children: [f.jsx("div", {
-                        className: `prog-flourish ${s} absolute -translate-y-1/2`,
-                        style: {
-                            top: `${n}%`
-                        },
-                        children: f.jsx(Fe, {
-                            delay: .08 * t,
-                            className: "flex",
-                            children: f.jsx(HH, {
-                                mirror: !r
-                            })
+                        className: "flex justify-end",
+                        children: n ? r : s
+                    }), f.jsx(Fe, {
+                        delay: .08 * t,
+                        className: "relative z-10 flex justify-center",
+                        children: f.jsx("img", {
+                            src: "assets/l5e-images/garland-pendant-05.png",
+                            alt: "",
+                            "aria-hidden": "true",
+                            className: "select-none pointer-events-none",
+                            style: {
+                                width: "26px",
+                                height: "auto"
+                            },
+                            loading: "lazy"
                         })
                     }), f.jsx("div", {
-                        className: `prog-text ${s} absolute -translate-y-1/2`,
-                        style: {
-                            top: `${n}%`
-                        },
-                        children: f.jsxs(Fe, {
-                            delay: .08 * t,
-                            className: `relative flex flex-col whitespace-nowrap ${r?"items-end text-right":"items-start text-left"}`,
-                            children: [f.jsx("img", {
-                                src: e.icon.url,
-                                alt: "",
-                                "aria-hidden": "true",
-                                className: `absolute bottom-[calc(100%+6px)] md:bottom-[calc(100%+9px)] h-[var(--icon-h)] md:h-[var(--icon-h-d)] w-auto max-w-none object-contain select-none pointer-events-none ${r?"right-0":"left-[6px]"}`,
-                                style: {
-                                    "--icon-h": e.iconH,
-                                    "--icon-h-d": e.iconHD
-                                },
-                                loading: "lazy"
-                            }), f.jsx("span", {
-                                className: "font-body italic text-[17px] md:text-[22px] text-sage-dark leading-tight",
-                                children: e.label
-                            }), f.jsx("span", {
-                                className: "font-body font-light text-[14px] md:text-[19px] text-sage-dark/70 tabular-nums",
-                                children: e.time
-                            })]
-                        })
+                        className: "flex justify-start",
+                        children: n ? s : r
                     })]
                 }, e.label)
+            }), f.jsx(tmCap, {
+                flip: !0
             })]
         })]
     })
@@ -26329,7 +26603,7 @@ function rK() {
                 delay: .3,
                 children: f.jsxs("p", {
                     className: "font-body text-base md:text-lg text-sage-dark/80 leading-relaxed tracking-wide max-w-md mx-auto text-center mt-4 px-6",
-                    children: ["Our wedding color palette for the ladies.", f.jsx("br", {}), "If you wish, we'd love for you to dress in harmony with our chosen colors to add a special touch to our beautiful day."]
+                    children: [trL("Our wedding color palette for the ladies."), f.jsx("br", {}), trL("If you wish, we'd love for you to dress in harmony with our chosen colors to add a special touch to our beautiful day.")]
                 })
             }), f.jsx(Fe, {
                 delay: .4,
@@ -27067,7 +27341,7 @@ function hY() {
                         children: e("accommodation.title").split("&").map((t, n, r) => n < r.length - 1 ? f.jsxs("span", {
                             children: [t, f.jsx("span", {
                                 className: "font-subtitle italic text-[26px] md:text-[34px] text-dusty-rose align-middle",
-                                children: "&"
+                                children: trL("&")
                             })]
                         }, n) : f.jsx("span", {
                             children: t
@@ -35476,21 +35750,6 @@ function Ob({
             alt: "",
             className: "absolute inset-0 h-full w-full select-none",
             loading: "lazy"
-        }), f.jsx("img", {
-            src: RZ.url,
-            alt: "",
-            className: "rsvp-leaf rsvp-leaf-one",
-            loading: "lazy"
-        }), f.jsx("img", {
-            src: LZ.url,
-            alt: "",
-            className: "rsvp-leaf rsvp-leaf-two",
-            loading: "lazy"
-        }), f.jsx("img", {
-            src: qZ.url,
-            alt: "",
-            className: "rsvp-leaf rsvp-leaf-three",
-            loading: "lazy"
         })]
     })
 }
@@ -35966,13 +36225,13 @@ function aJ({
                             className: "flex flex-col items-center text-center whitespace-nowrap",
                             children: [f.jsxs("h2", {
                                 className: "font-display text-[41px] md:text-[53px] font-normal text-sage-dark leading-tight tracking-[0.01em] whitespace-nowrap",
-                                children: [e, " ", f.jsx("span", {
+                                children: [trL(e), " ", f.jsx("span", {
                                     className: "font-subtitle italic text-2xl md:text-3xl text-dusty-rose",
-                                    children: "&"
-                                }), " ", t]
+                                    children: trL("&")
+                                }), " ", trL(t)]
                             }), f.jsx("p", {
                                 className: "section-eyebrow mt-3 !text-sm md:!text-base tracking-[0.4em]",
-                                children: u
+                                children: trL(u)
                             })]
                         })
                     }), f.jsx(Fe, {
@@ -36350,7 +36609,7 @@ const uJ = 1,
     RJ = 1,
     PJ = "d4b2de74-315c-4a09-91c1-4f8a84daba8a",
     jJ = "23bfcf12-6136-45ef-b70a-a3bc0be2e938",
-    AJ = "assets/l5e-images/couple-scratch-inspo.jpeg",
+    AJ = "assets/l5e-images/tariq-maha-couple.jpg",
     NJ = "a/v1/23bfcf12-6136-45ef-b70a-a3bc0be2e938/d4b2de74-315c-4a09-91c1-4f8a84daba8a/couple-scratch-inspo.jpeg",
     $J = "couple-scratch-inspo.jpeg",
     OJ = 150242,
@@ -36380,14 +36639,41 @@ function LJ() {
             const w = new Image;
             w.onload = () => g(), w.onerror = () => g(), w.src = x
         });
-        return Promise.all([p(Mb.url), p(Db.url)]).then(() => {
+        return Promise.all([p(Mb.url), p(Db.url), p(Lb)]).then(() => {
             h || d(!0)
         }), () => {
             h = !0
         }
-    }, []), f.jsx("section", {
+    }, []), f.jsxs("section", {
         className: "relative overflow-hidden pt-2 md:pt-3 pb-[50px] md:pb-[32px]",
-        children: f.jsx("div", {
+        children: [f.jsxs("div", {
+            className: "relative z-10 flex flex-col items-center text-center px-6 mb-2",
+            children: [f.jsx("span", {
+                className: "font-script text-ivory",
+                style: {
+                    fontSize: "42px",
+                    lineHeight: 1.15
+                },
+                children: trL("so don't be late!")
+            }), f.jsx("span", {
+                className: "font-body uppercase text-ivory",
+                style: {
+                    fontSize: "13px",
+                    letterSpacing: "0.3em",
+                    marginTop: "1rem",
+                    opacity: .85
+                },
+                children: "05 · 12 · 2026"
+            }), f.jsx("span", {
+                className: "font-body italic text-ivory",
+                style: {
+                    fontSize: "15px",
+                    marginTop: "0.25rem",
+                    opacity: .85
+                },
+                children: trL("5:00 PM")
+            })]
+        }), f.jsx("div", {
             ref: t,
             className: "relative z-10 w-full max-w-[340px] md:max-w-[390px] mx-auto px-4",
             children: u && f.jsxs(ue.div, {
@@ -36406,38 +36692,15 @@ function LJ() {
                     duration: .7
                 },
                 className: "relative w-full aspect-[682/1024] flex items-center justify-center",
-                children: [f.jsxs("div", {
-                    className: "absolute inset-0 z-0 w-full h-full flex flex-col items-center justify-center text-center bg-ivory select-none",
+                children: [f.jsx("img", {
+                    src: Lb,
+                    alt: "Tariq & Maha",
+                    className: "absolute inset-0 z-0 w-full h-full object-cover bg-ivory select-none pointer-events-none",
                     style: {
                         clipPath: wc,
                         WebkitClipPath: wc,
-                        padding: "0 22%"
-                    },
-                    children: [f.jsx("span", {
-                        className: "font-script text-sage-dark",
-                        style: {
-                            fontSize: "42px",
-                            lineHeight: 1.15
-                        },
-                        children: "so don't be late!"
-                    }), f.jsx("span", {
-                        className: "font-body uppercase text-sage-dark",
-                        style: {
-                            fontSize: "13px",
-                            letterSpacing: "0.3em",
-                            marginTop: "1.25rem",
-                            opacity: .8
-                        },
-                        children: "05 · 12 · 2026"
-                    }), f.jsx("span", {
-                        className: "font-body italic text-sage-dark",
-                        style: {
-                            fontSize: "15px",
-                            marginTop: "0.25rem",
-                            opacity: .8
-                        },
-                        children: "5:00 PM"
-                    })]
+                        objectPosition: "center 30%"
+                    }
                 }), f.jsx("img", {
                     src: Mb.url,
                     alt: "",
@@ -36530,7 +36793,7 @@ function LJ() {
                     origin: l
                 })]
             })
-        })
+        })]
     })
 }
 const FJ = 1,
@@ -36594,7 +36857,7 @@ const FJ = 1,
                             })
                         }), f.jsx("h2", {
                             className: "section-heading leading-tight mt-0 mb-4 !text-ivory",
-                            children: "We can't wait to celebrate our love with you"
+                            children: trL("We can't wait to celebrate our love with you")
                         })]
                     })
                 }), f.jsx(LJ, {})]
@@ -36621,7 +36884,7 @@ const FJ = 1,
             }), t && f.jsx(t8, {
                 isMuted: e,
                 onToggle: n
-            })]
+            }), r && f.jsx(LangToggle, {})]
         })
     },
     Xf = "admin_session_token";

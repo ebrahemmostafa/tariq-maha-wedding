@@ -20,7 +20,27 @@
     <link rel="stylesheet" href="css/index-D_VbP-h5.css">
     <style>
       /* Invitation background color */
-      html, body, .bg-ivory, .bg-background { background-color: #EBD1CE; }
+      html, body, .bg-ivory, .bg-background { background-color: #F7E3E5; }
+
+      /* Arabic version: Amiri everywhere, no Latin-only styling that breaks Arabic letters */
+      html[lang="ar"] {
+        --font-script: "Amiri", serif;
+        --font-display: "Amiri", serif;
+        --font-body: "Amiri", serif;
+        --font-subtitle: "Amiri", serif;
+      }
+      html[lang="ar"] main * { letter-spacing: 0 !important; font-style: normal !important; text-transform: none !important; }
+      html[lang="ar"] main .font-script,
+      html[lang="ar"] main .font-display,
+      html[lang="ar"] main .section-heading { font-weight: 700; line-height: 1.4; }
+      /* Arabic letters read smaller than Latin at the same size */
+      html[lang="ar"] main .text-xs,
+      html[lang="ar"] main .section-eyebrow,
+      html[lang="ar"] main [class*="text-[12"],
+      html[lang="ar"] main [class*="text-[13"],
+      html[lang="ar"] main span[style*="font-size: 13px"] { font-size: 16px !important; }
+      html[lang="ar"] main .text-sm,
+      html[lang="ar"] main [class*="text-[14"] { font-size: 17px !important; }
     </style>
     <script src="js/supabase-config.js"></script>
     <script type="module" src="js/index-B5N1kRjD.beautified.js"></script>
