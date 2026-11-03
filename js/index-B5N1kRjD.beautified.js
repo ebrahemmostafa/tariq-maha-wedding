@@ -26567,12 +26567,6 @@ function rK() {
                     className: "w-[70%] max-w-[440px] h-auto select-none pointer-events-none mb-6 md:mb-8"
                 })
             }), f.jsx(Fe, {
-                delay: .1,
-                children: f.jsx("h2", {
-                    className: "section-heading text-sage-dark mb-2",
-                    children: e("dress.title")
-                })
-            }), f.jsx(Fe, {
                 delay: .2,
                 children: f.jsx("p", {
                     className: "font-body italic text-[20px] md:text-[26px] text-sage-dark leading-snug max-w-md mx-auto text-center mt-2 px-6",
