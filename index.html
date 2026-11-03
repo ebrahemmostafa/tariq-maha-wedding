@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="css/index-D_VbP-h5.css">
     <style>
       /* Invitation background color */
-      html, body, .bg-ivory, .bg-background { background-color: #F7E3E5; }
+      html, body, .bg-ivory, .bg-background { background-color: #FFE3EB; }
 
       /* Arabic version: Amiri everywhere, no Latin-only styling that breaks Arabic letters */
       html[lang="ar"] {
@@ -41,6 +41,10 @@
       html[lang="ar"] main span[style*="font-size: 13px"] { font-size: 16px !important; }
       html[lang="ar"] main .text-sm,
       html[lang="ar"] main [class*="text-[14"] { font-size: 17px !important; }
+      /* First page in Arabic: keep the names block as compact as the English one */
+      html[lang="ar"] #hero h1 { line-height: 1.05; font-size: 52px; }
+      html[lang="ar"] #hero h1 span.font-subtitle { margin: 4px 0; }
+      html[lang="ar"] #hero p { font-size: 15px !important; line-height: 1.5; }
     </style>
     <script src="js/supabase-config.js"></script>
     <script type="module" src="js/index-B5N1kRjD.beautified.js"></script>

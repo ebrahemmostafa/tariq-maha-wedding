@@ -16191,16 +16191,13 @@ DEC
         "confirm.thankYou": "شكراً لك",
         "confirm.cantMake": "نأسف لعدم تمكنك من الحضور، وستكون في بالنا في يومنا المميز.",
         "confirm.thankResponse": "شكراً على ردك!",
-        "confirm.excited": "سعداء جداً بالاحتفال معك في ذا فاين.",
+        "confirm.excited": "سعداء جداً بالاحتفال معك في The Vine.",
         "confirm.thankPart": "شكراً لأنك جزء من قصتنا.",
         "confirm.lookForward": "في انتظاركم يوم:",
         "confirm.addCalendar": "أضف إلى التقويم",
         "confirm.plansChange": "لو تغيّرت خططك ولن تتمكن من الحضور، من فضلك أخبرنا في أقرب وقت.",
         "footer.madeBy": "صُنع بحب بواسطة",
         "Tap to open": "اضغط للفتح",
-        "The Vine": "ذا فاين",
-        "The": "ذا",
-        " Vine": " فاين",
         "Obour City": "مدينة العبور",
         "Gameiat Oraby": "جمعية عرابي",
         "Line 7, Gameiat Oraby": "الخط 7، جمعية عرابي",
@@ -16209,7 +16206,7 @@ DEC
         "Maha": "مها",
         "Mohamed": "محمد",
         "Khaled": "خالد",
-        "Request the pleasure of your company as they begin their journey together.": "ويسعدهم مشاركتكم فرحتهم في بداية رحلتهم معاً.",
+        "Request the pleasure of your company as they begin their journey together.": "يسعدهم مشاركتكم فرحتهم في بداية رحلتهم معاً.",
         "We can't wait to celebrate our love with you": "ننتظركم بكل حب لنحتفل معاً",
         "so don't be late!": "فلا تتأخروا!",
         "05 · 12 · 2026": "5 ديسمبر 2026",
@@ -16225,7 +16222,9 @@ DEC
         "Photos Time": "وقت التصوير",
         "Dinner": "العشاء",
         "December 5, 2026": "5 ديسمبر 2026",
-        "&": "و"
+        "&": "و",
+        "A night of love, laughter & dancing awaits!": "ليلة مليانة حب وضحك ورقص في انتظاركم!",
+        "Wear your dancing shoes—or bring your comfiest pair to dance the night away. 🤍": "البسوا جزمة الرقص، أو هاتوا أريح جزمة عندكم عشان نرقص لآخر الليل. 🤍"
     }
     },
     M5 = {
@@ -22218,7 +22217,9 @@ function e8({
             children: f.jsxs("div", {
                 className: "-translate-y-[20px] flex flex-col items-center w-full",
                 children: [f.jsxs("div", {
-                    className: "-translate-y-[20px]",
+                    style: {
+                        transform: "translateY(6px)"
+                    },
                     children: [f.jsx(_r, {
                         delay: .2,
                         children: f.jsx("p", {
@@ -26447,29 +26448,7 @@ function KH() {
     return f.jsxs("section", {
         id: "day-program",
         className: "relative pt-2 md:pt-6 pb-14 md:pb-20 px-6 md:px-12 bg-ivory overflow-hidden",
-        children: [f.jsxs(Fe, {
-            className: "relative w-[130%] md:w-[110%] max-w-none -ml-[15%] md:-ml-[5%] mb-7 md:mb-10",
-            children: [f.jsx("img", {
-                src: jz.url,
-                alt: "",
-                "aria-hidden": "true",
-                className: "w-full h-auto select-none pointer-events-none block",
-                loading: "lazy"
-            }), BH.map((e, t) => f.jsx("img", {
-                src: e.src.url,
-                alt: "",
-                "aria-hidden": "true",
-                className: "pendant-swing absolute select-none pointer-events-none h-auto",
-                style: {
-                    left: `${e.x/tb*100}%`,
-                    top: `${e.y/UH*100}%`,
-                    width: `${e.w/tb*100}%`,
-                    animationDuration: `${2.1+t%5*.3}s`,
-                    animationDelay: `${-(t*.37%4)}s`,
-                    animationDirection: t % 2 === 0 ? "alternate" : "alternate-reverse"
-                }
-            }, t))]
-        }), f.jsx(Fe, {
+        children: [f.jsx(Fe, {
             className: "font-script text-[41px] md:text-[53px] text-sage-dark mb-3 text-center whitespace-pre-line leading-none",
             children: trL("Program")
         }), f.jsxs(Fe, {
@@ -26596,34 +26575,15 @@ function rK() {
             }), f.jsx(Fe, {
                 delay: .2,
                 children: f.jsx("p", {
-                    className: "font-body text-[18px] md:text-[24px] text-gold-dark/80 uppercase tracking-[0.35em] mt-2",
-                    children: e("dress.main")
+                    className: "font-body italic text-[20px] md:text-[26px] text-sage-dark leading-snug max-w-md mx-auto text-center mt-2 px-6",
+                    children: trL("A night of love, laughter & dancing awaits!")
                 })
             }), f.jsx(Fe, {
                 delay: .3,
-                children: f.jsxs("p", {
+                children: f.jsx("p", {
                     className: "font-body text-base md:text-lg text-sage-dark/80 leading-relaxed tracking-wide max-w-md mx-auto text-center mt-4 px-6",
-                    children: [trL("Our wedding color palette for the ladies."), f.jsx("br", {}), trL("If you wish, we'd love for you to dress in harmony with our chosen colors to add a special touch to our beautiful day.")]
+                    children: trL("Wear your dancing shoes—or bring your comfiest pair to dance the night away. 🤍")
                 })
-            }), f.jsx(Fe, {
-                delay: .4,
-                className: "flex items-center justify-center",
-                style: {
-                    gap: "12px",
-                    marginTop: "2rem"
-                },
-                children: ["#58042A", "#7D0644", "#C0737B", "#8B9C5C", "#566B32"].map(c => f.jsx("span", {
-                    "aria-hidden": "true",
-                    style: {
-                        display: "block",
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "9999px",
-                        backgroundColor: c,
-                        border: "2px solid rgba(255,255,255,0.7)",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-                    }
-                }, c))
             })]
         })
     })
@@ -36663,7 +36623,7 @@ function LJ() {
                     marginTop: "1rem",
                     opacity: .85
                 },
-                children: "05 · 12 · 2026"
+                children: trL("05 · 12 · 2026")
             }), f.jsx("span", {
                 className: "font-body italic text-ivory",
                 style: {
@@ -36699,7 +36659,7 @@ function LJ() {
                     style: {
                         clipPath: wc,
                         WebkitClipPath: wc,
-                        objectPosition: "center 30%"
+                        objectPosition: "center"
                     }
                 }), f.jsx("img", {
                     src: Mb.url,
