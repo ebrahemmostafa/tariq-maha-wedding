@@ -26126,31 +26126,31 @@ const dz = 1,
         iconH: "48px",
         iconHD: "62px"
     }, {
-        time: "6:00 PM",
+        time: "",
         label: "Entrance",
         icon: zH,
         iconH: "61px",
         iconHD: "77px"
     }, {
-        time: "6:15 PM",
+        time: "",
         label: "Katb Ketab",
         icon: eH,
         iconH: "60px",
         iconHD: "76px"
     }, {
-        time: "7:00 PM",
+        time: "",
         label: "Party",
         icon: jH,
         iconH: "60px",
         iconHD: "73px"
     }, {
-        time: "8:00 PM",
+        time: "",
         label: "Photos Time",
         icon: uH,
         iconH: "57px",
         iconHD: "72px"
     }, {
-        time: "8:30 PM",
+        time: "",
         label: "Dinner",
         icon: bH,
         iconH: "50px",
@@ -26448,7 +26448,29 @@ function KH() {
     return f.jsxs("section", {
         id: "day-program",
         className: "relative pt-2 md:pt-6 pb-14 md:pb-20 px-6 md:px-12 bg-ivory overflow-hidden",
-        children: [f.jsx(Fe, {
+        children: [f.jsxs(Fe, {
+            className: "relative w-[130%] md:w-[110%] max-w-none -ml-[15%] md:-ml-[5%] mb-7 md:mb-10",
+            children: [f.jsx("img", {
+                src: jz.url,
+                alt: "",
+                "aria-hidden": "true",
+                className: "w-full h-auto select-none pointer-events-none block",
+                loading: "lazy"
+            }), BH.map((e, t) => f.jsx("img", {
+                src: e.src.url,
+                alt: "",
+                "aria-hidden": "true",
+                className: "pendant-swing absolute select-none pointer-events-none h-auto",
+                style: {
+                    left: `${e.x/tb*100}%`,
+                    top: `${e.y/UH*100}%`,
+                    width: `${e.w/tb*100}%`,
+                    animationDuration: `${2.1+t%5*.3}s`,
+                    animationDelay: `${-(t*.37%4)}s`,
+                    animationDirection: t % 2 === 0 ? "alternate" : "alternate-reverse"
+                }
+            }, t))]
+        }), f.jsx(Fe, {
             className: "font-script text-[41px] md:text-[53px] text-sage-dark mb-3 text-center whitespace-pre-line leading-none",
             children: trL("Program")
         }), f.jsxs(Fe, {
@@ -26484,7 +26506,7 @@ function KH() {
                             className: "font-body italic text-[17px] md:text-[22px] text-sage-dark leading-tight",
                             dir: "auto",
                             children: trL(e.label)
-                        }), f.jsx("span", {
+                        }), e.time && f.jsx("span", {
                             className: "font-body font-light text-[14px] md:text-[19px] text-sage-dark/70 tabular-nums",
                             dir: "auto",
                             children: trL(e.time)
