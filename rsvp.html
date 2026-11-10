@@ -97,6 +97,7 @@
       tbody tr:last-child td { border-bottom: 0; }
       td.num { text-align: center; font-variant-numeric: tabular-nums; }
       td.name { font-weight: 600; min-width: 160px; }
+      .plus { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgba(184, 147, 90, .18); color: #7a5a2a; white-space: nowrap; }
       td.notes, td.msg { white-space: pre-line; max-width: 280px; color: var(--muted); }
       td.date { white-space: nowrap; color: var(--muted); font-size: 15px; }
       .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .06em; white-space: nowrap; }
@@ -154,6 +155,7 @@
           <div class="card stat yes"><div class="num" id="s-yes">0</div><div class="lbl">Accepted</div></div>
           <div class="card stat no"><div class="num" id="s-no">0</div><div class="lbl">Declined</div></div>
           <div class="card stat yes"><div class="num" id="s-guests">0</div><div class="lbl">Guests coming</div></div>
+          <div class="card stat"><div class="num" id="s-plus">0</div><div class="lbl">+ Persons</div></div>
           <div class="card stat"><div class="num" id="s-adults">0</div><div class="lbl">Adults</div></div>
           <div class="card stat"><div class="num" id="s-children">0</div><div class="lbl">Children</div></div>
         </section>
@@ -178,6 +180,7 @@
               <tr>
                 <th data-sort="full_name">Guest(s) <span class="arrow"></span></th>
                 <th data-sort="attendance">Answer <span class="arrow"></span></th>
+                <th data-sort="plus_count">+ Persons <span class="arrow"></span></th>
                 <th data-sort="adult_count">Adults <span class="arrow"></span></th>
                 <th data-sort="children_count">Children <span class="arrow"></span></th>
                 <th data-sort="guest_count">Total <span class="arrow"></span></th>
@@ -255,7 +258,11 @@
                 return false;
               }
               setPasscode(passcode);
-              state.rows = data.rows || [];
+              state.rows = (data.rows || []).map(function (r) {
+                // + persons = everyone coming beyond the guest who replied
+                r.plus_count = r.attendance === "yes" ? Math.max(0, num(r.guest_count) - 1) : 0;
+                return r;
+              });
               $("lock").hidden = true;
               $("dash").hidden = false;
               $("updated").textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -309,6 +316,7 @@
           $("s-yes").textContent = yes.length;
           $("s-no").textContent = all.length - yes.length;
           $("s-guests").textContent = yes.reduce(function (s, r) { return s + num(r.guest_count); }, 0);
+          $("s-plus").textContent = yes.reduce(function (s, r) { return s + r.plus_count; }, 0);
           $("s-adults").textContent = yes.reduce(function (s, r) { return s + num(r.adult_count); }, 0);
           $("s-children").textContent = yes.reduce(function (s, r) { return s + num(r.children_count); }, 0);
 
@@ -322,12 +330,19 @@
           rows.forEach(function (r) {
             var going = r.attendance === "yes";
             var tr = document.createElement("tr");
-            cell(tr, "name", "", r.full_name);
+            var nm = cell(tr, "name", "", r.full_name);
+            if (going && r.plus_count > 0) {
+              var plus = document.createElement("span");
+              plus.className = "plus";
+              plus.textContent = "+" + r.plus_count;
+              nm.appendChild(plus);
+            }
             var att = cell(tr, "att", "", "");
             var pill = document.createElement("span");
             pill.className = "pill " + (going ? "yes" : "no");
             pill.textContent = going ? "Accepts" : "Declines";
             att.appendChild(pill);
+            cell(tr, "num", "+ Persons", going ? "+" + r.plus_count : "–");
             cell(tr, "num", "Adults", going ? num(r.adult_count) : "–");
             cell(tr, "num", "Children", going ? num(r.children_count) : "–");
             cell(tr, "num", "Total", going ? num(r.guest_count) : "–");
@@ -368,11 +383,11 @@
         }
 
         function exportCsv() {
-          var head = ["Guest(s)", "Answer", "Adults", "Children", "Total guests", "Dietary notes", "Message", "Received"];
+          var head = ["Guest(s)", "Answer", "+ Persons", "Adults", "Children", "Total guests", "Dietary notes", "Message", "Received"];
           var lines = [head].concat(filtered().map(function (r) {
             var going = r.attendance === "yes";
             return [r.full_name, going ? "Accepts" : "Declines",
-              going ? num(r.adult_count) : 0, going ? num(r.children_count) : 0, going ? num(r.guest_count) : 0,
+              going ? r.plus_count : 0, going ? num(r.adult_count) : 0, going ? num(r.children_count) : 0, going ? num(r.guest_count) : 0,
               r.dietary_requirements || "", r.message || "", fmtDate(r.responded_at)];
           })).map(function (row) { return row.map(csvCell).join(","); });
           // BOM so Excel opens Arabic names correctly

@@ -16126,9 +16126,9 @@ DEC
         "rsvp.no": "Regretfully declines",
         "rsvp.fullName": "Full name *",
         "rsvp.enterName": "Enter your full name",
-        "rsvp.howMany": "Number of guests attending *",
-        "rsvp.guestName": "Guest {n} name *",
-        "rsvp.enterGuestName": "Enter guest's full name",
+        "rsvp.howMany": "+ Persons coming with you",
+        "rsvp.guestName": "Person +{n} name *",
+        "rsvp.enterGuestName": "Enter their full name",
         "rsvp.children": "Number of children attending",
         "rsvp.allergies": "Allergies or dietary requirements (for all adults and children)",
         "rsvp.allergiesPlaceholder": "Let us know about any allergies or dietary needs for any of your guests...",
@@ -16182,6 +16182,12 @@ DEC
         "rsvp.no": "أعتذر عن الحضور",
         "rsvp.fullName": "الاسم بالكامل *",
         "rsvp.enterName": "اكتب اسمك بالكامل",
+        "rsvp.howMany": "+ أشخاص معك",
+        "rsvp.guestName": "اسم الشخص +{n} *",
+        "rsvp.enterGuestName": "اكتب اسمه بالكامل",
+        "rsvp.children": "عدد الأطفال",
+        "rsvp.allergies": "الحساسية أو متطلبات غذائية (لكل الكبار والأطفال)",
+        "rsvp.allergiesPlaceholder": "أخبرنا عن أي حساسية أو احتياجات غذائية لأي من ضيوفك...",
         "rsvp.message": "رسالة للعروسين",
         "rsvp.messagePlaceholder": "اكتب أمنية أو ذكرى أو أي كلمة تحب نقرأها…",
         "rsvp.sending": "جارٍ الإرسال…",
@@ -35879,7 +35885,7 @@ function YZ() {
                             children: [f.jsx(et, {
                                 htmlFor: "fullName",
                                 className: "text-ivory font-medium",
-                                children: p.attendance === "yes" && r > 1 ? e("rsvp.guestName").replace("{n}", "1") : e("rsvp.fullName")
+                                children: e("rsvp.fullName")
                             }), f.jsx(Hr, {
                                 id: "fullName",
                                 required: !0,
@@ -35954,10 +35960,12 @@ function YZ() {
                                     className: "h-10 w-10 border-ivory/40 text-ivory hover:bg-ivory/10",
                                     onClick: () => y(r - 1),
                                     disabled: r <= 1,
+                                    "aria-label": "Remove a person",
                                     children: "-"
                                 }), f.jsx("span", {
                                     className: "w-10 text-center text-lg font-medium text-ivory",
-                                    children: r
+                                    "aria-live": "polite",
+                                    children: `+${r-1}`
                                 }), f.jsx(Xt, {
                                     type: "button",
                                     variant: "outline",
@@ -35965,6 +35973,7 @@ function YZ() {
                                     className: "h-10 w-10 border-ivory/40 text-ivory hover:bg-ivory/10",
                                     onClick: () => y(r + 1),
                                     disabled: r >= 10,
+                                    "aria-label": "Add a person",
                                     children: "+"
                                 })]
                             }), a.length > 0 && f.jsx("div", {
@@ -35973,7 +35982,7 @@ function YZ() {
                                     children: [f.jsx(et, {
                                         htmlFor: `guest-${S+2}`,
                                         className: "text-ivory font-medium",
-                                        children: e("rsvp.guestName").replace("{n}", String(S + 2))
+                                        children: e("rsvp.guestName").replace("{n}", String(S + 1))
                                     }), f.jsx(Hr, {
                                         id: `guest-${S+2}`,
                                         required: !0,
