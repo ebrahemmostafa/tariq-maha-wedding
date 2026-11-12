@@ -36086,46 +36086,6 @@ function YZ() {
                                     })]
                                 })]
                             })]
-                        }), p.attendance === "yes" && f.jsxs("div", {
-                            children: [f.jsx(et, {
-                                className: "text-ivory font-medium",
-                                children: e("rsvp.allergies")
-                            }), f.jsxs("div", {
-                                className: "space-y-3 mt-2",
-                                children: [c.map((_, S) => f.jsxs("div", {
-                                    children: [f.jsx(et, {
-                                        htmlFor: `allergies-adult-${S}`,
-                                        className: "text-ivory/70 text-[10px] uppercase tracking-[0.25em]",
-                                        children: `Adult ${S+1}`
-                                    }), f.jsx(Hr, {
-                                        id: `allergies-adult-${S}`,
-                                        maxLength: 500,
-                                        value: _,
-                                        onChange: k => {
-                                            const E = [...c];
-                                            E[S] = k.target.value, u(E)
-                                        },
-                                        className: "mt-1 bg-ivory border-gold/30 text-sage-dark placeholder:text-sage-dark/50 focus:border-gold",
-                                        placeholder: e("rsvp.allergiesPlaceholder")
-                                    })]
-                                }, `allergies-adult-${S}`)), d.map((_, S) => f.jsxs("div", {
-                                    children: [f.jsx(et, {
-                                        htmlFor: `allergies-child-${S}`,
-                                        className: "text-ivory/70 text-[10px] uppercase tracking-[0.25em]",
-                                        children: `Child ${S+1}`
-                                    }), f.jsx(Hr, {
-                                        id: `allergies-child-${S}`,
-                                        maxLength: 500,
-                                        value: _,
-                                        onChange: k => {
-                                            const E = [...d];
-                                            E[S] = k.target.value, h(E)
-                                        },
-                                        className: "mt-1 bg-ivory border-gold/30 text-sage-dark placeholder:text-sage-dark/50 focus:border-gold",
-                                        placeholder: e("rsvp.allergiesPlaceholder")
-                                    })]
-                                }, `allergies-child-${S}`))]
-                            })]
                         }), f.jsxs("div", {
                             children: [f.jsx(et, {
                                 htmlFor: "message",
