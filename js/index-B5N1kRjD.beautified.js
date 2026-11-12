@@ -16127,6 +16127,7 @@ DEC
         "rsvp.fullName": "Full name *",
         "rsvp.enterName": "Enter your full name",
         "rsvp.howMany": "+ Persons coming with you",
+        "rsvp.upTo": "up to",
         "rsvp.guestName": "Person +{n} name *",
         "rsvp.enterGuestName": "Enter their full name",
         "rsvp.children": "Number of children attending",
@@ -16183,6 +16184,7 @@ DEC
         "rsvp.fullName": "الاسم بالكامل *",
         "rsvp.enterName": "اكتب اسمك بالكامل",
         "rsvp.howMany": "+ أشخاص معك",
+        "rsvp.upTo": "بحد أقصى",
         "rsvp.guestName": "اسم الشخص +{n} *",
         "rsvp.enterGuestName": "اكتب اسمه بالكامل",
         "rsvp.children": "عدد الأطفال",
@@ -35736,6 +35738,20 @@ function Ob({
     })
 }
 
+const inviteCaps = {
+        rose: 1,
+        lily: 2,
+        jasmine: 3,
+        orchid: 4
+    },
+    inviteCap = (() => {
+        try {
+            return inviteCaps[new URLSearchParams(location.search).get("i")] ?? 0
+        } catch {
+            return 0
+        }
+    })();
+
 function YZ() {
     const {
         t: e
@@ -35748,7 +35764,7 @@ function YZ() {
     }), g = aZ(), {
         toast: w
     } = td(), y = _ => {
-        const S = Math.max(1, Math.min(10, _));
+        const S = Math.max(1, Math.min(inviteCap + 1 - o, _));
         s(S), u(k => {
             const E = k.slice(0, S);
             for (; E.length < S;) E.push("");
@@ -35760,7 +35776,7 @@ function YZ() {
             return R
         })
     }, v = _ => {
-        const S = Math.max(0, Math.min(10, _));
+        const S = Math.max(0, Math.min(inviteCap - (r - 1), _));
         i(S), h(k => {
             const E = k.slice(0, S);
             for (; E.length < S;) E.push("");
@@ -35941,7 +35957,7 @@ function YZ() {
                                     })]
                                 })]
                             })]
-                        }), p.attendance === "yes" && f.jsxs("div", {
+                        }), p.attendance === "yes" && inviteCap > 0 && f.jsxs("div", {
                             className: "space-y-3",
                             children: [f.jsxs("div", {
                                 className: "flex items-center gap-2",
@@ -35949,7 +35965,7 @@ function YZ() {
                                     className: "w-4 h-4 text-ivory/80"
                                 }), f.jsx(et, {
                                     className: "text-base text-ivory font-medium",
-                                    children: e("rsvp.howMany")
+                                    children: `${e("rsvp.howMany")} (${e("rsvp.upTo")} +${inviteCap})`
                                 })]
                             }), f.jsxs("div", {
                                 className: "flex items-center gap-2",
@@ -35972,7 +35988,7 @@ function YZ() {
                                     size: "icon",
                                     className: "h-10 w-10 border-ivory/40 text-ivory hover:bg-ivory/10",
                                     onClick: () => y(r + 1),
-                                    disabled: r >= 10,
+                                    disabled: r - 1 + o >= inviteCap,
                                     "aria-label": "Add a person",
                                     children: "+"
                                 })]
@@ -36023,7 +36039,7 @@ function YZ() {
                                     size: "icon",
                                     className: "h-10 w-10 border-ivory/40 text-ivory hover:bg-ivory/10",
                                     onClick: () => v(o + 1),
-                                    disabled: o >= 10,
+                                    disabled: r - 1 + o >= inviteCap,
                                     children: "+"
                                 })]
                             })]
