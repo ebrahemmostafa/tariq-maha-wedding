@@ -47,11 +47,11 @@ create table if not exists public.rsvps (
 );
 
 -- A table made outside this script may lack some columns; add any the site and rsvp.html use.
-alter table public.rsvps add column if not exists guest_count          integer not null default 1;
-alter table public.rsvps add column if not exists adult_count          integer not null default 1;
-alter table public.rsvps add column if not exists children_count       integer not null default 0;
-alter table public.rsvps add column if not exists dietary_requirements text;
-alter table public.rsvps add column if not exists message              text;
+alter table public.rsvps add column if not exists guest_count          integer not null default 1 check (guest_count between 0 and 30);
+alter table public.rsvps add column if not exists adult_count          integer not null default 1 check (adult_count between 0 and 20);
+alter table public.rsvps add column if not exists children_count       integer not null default 0 check (children_count between 0 and 20);
+alter table public.rsvps add column if not exists dietary_requirements text check (char_length(dietary_requirements) <= 1000);
+alter table public.rsvps add column if not exists message              text check (char_length(message) <= 2000);
 do $$
 begin
   if not exists (select 1 from information_schema.columns
