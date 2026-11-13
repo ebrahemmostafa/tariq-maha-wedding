@@ -46,6 +46,25 @@ create table if not exists public.rsvps (
   responded_at         timestamptz not null default now()
 );
 
+-- A table made outside this script may lack some columns; add any the site and rsvp.html use.
+alter table public.rsvps add column if not exists guest_count          integer not null default 1;
+alter table public.rsvps add column if not exists adult_count          integer not null default 1;
+alter table public.rsvps add column if not exists children_count       integer not null default 0;
+alter table public.rsvps add column if not exists dietary_requirements text;
+alter table public.rsvps add column if not exists message              text;
+do $$
+begin
+  if not exists (select 1 from information_schema.columns
+                 where table_schema = 'public' and table_name = 'rsvps' and column_name = 'responded_at') then
+    alter table public.rsvps add column responded_at timestamptz not null default now();
+    -- keep the real reply times if the table recorded them as created_at
+    if exists (select 1 from information_schema.columns
+               where table_schema = 'public' and table_name = 'rsvps' and column_name = 'created_at') then
+      execute 'update public.rsvps set responded_at = created_at where created_at is not null';
+    end if;
+  end if;
+end $$;
+
 -- Admin passcode (hashed) and a log of passcode attempts for throttling.
 create table if not exists public.rsvp_admin_settings (
   id            integer primary key default 1 check (id = 1),
